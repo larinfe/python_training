@@ -1,90 +1,23 @@
-# -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-import unittest
+import pytest
 from group import Group
+from application import Application
 
-class TestAddGroup(unittest.TestCase):
-    def setUp(self):
-        self.wd = webdriver.Firefox()
-        self.wd.implicitly_wait(30)
 
-    
-    def test_add_group(self):
-        wd = self.wd
-        self.open_home_page(wd)
-        self.login(wd, username="admin", password="secret")
-        self.open_group_page_and_init_group_creation(wd)
-        self.fill_group_form(wd, Group(name="asdfasd", header="asdagagg", footer="asfasdasd"))
-        self.submit_group_creation(wd)
-        self.return_to_group_creation(wd)
-        self.logout(wd)
+@pytest.fixture
+def app(request)
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)
+    return fixture
 
-    def test_add_empty_group(self):
-        wd = self.wd
-        self.open_home_page(wd)
-        self.login(wd, username="admin", password="secret")
-        self.open_group_page_and_init_group_creation(wd)
-        self.fill_group_form(wd, Group(name = "", header = "", footer = ""))
-        self.submit_group_creation(wd)
-        self.return_to_group_creation(wd)
-        self.logout(wd)
 
-    def submit_group_creation(self, wd):
-        # submit group creation
-        wd.find_element_by_name("submit").click()
+def test_add_group(app):
+    app.login(username="admin", password="secret")
+    app.fill_group_form(Group(name="asdfasd", header="asdagagg", footer="asfasdasd"))
+    app.logout()
 
-    def fill_group_form(self, wd, group):
-        # fill group form
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.name)
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.header)
-        wd.find_element_by_name("group_footer").click()
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.footer)
 
-    def open_group_page_and_init_group_creation(self, wd):
-        # open groups page & init group creation
-        wd.find_element_by_name("new").click()
+def test_add_empty_group(app):
+    app.login(username="admin", password="secret")
+    app.fill_group_form(Group(name = "", header = "", footer = ""))
+    app.logout()
 
-    def logout(self, wd):
-        # logout
-        wd.find_element_by_link_text("Logout").click()
-
-    def return_to_group_creation(self, wd):
-        # return to group creation
-        wd.find_element_by_link_text("group page").click()
-
-    def login(self, wd, username, password):
-        # login
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//input[@value='Login']").click()
-
-    def open_home_page(self, wd):
-        # open home page
-        wd.get("http://localhost/addressbook/group.php")
-
-    def is_element_present(self, how, what):
-        try: self.wd.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.wd.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-    
-
-    def tearDown(self):
-        self.wd.quit()
-
-if __name__ == "__main__":
-    unittest.main()
