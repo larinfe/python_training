@@ -12,12 +12,12 @@ def app(request):
 
 def test_add_group(app):
     app.login(username="admin", password="secret")
-    app.fill_group_form(Group(name="asdfasd", header="asdagagg", footer="asfasdasd"))
+    app.fill_group_form(Group(name="call", header="cool", footer="cell"))
     app.logout()
 
 
 def test_add_empty_group(app):
-    app.login(username="admin", password="secret")
+    app.login(username = "admin", password = "secret")
     app.fill_group_form(Group(name = "", header = "", footer = ""))
     app.logout()
 

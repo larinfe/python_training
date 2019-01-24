@@ -25,6 +25,10 @@ class Application:
         wd = self.wd
         wd.find_element_by_name("new").click()
 
+    def submit_group_creation(self):
+        wd = self.wd
+        wd.find_element_by_name("submit").click()
+
     def fill_group_form(self, group):
         wd = self.wd
         self.open_group_page()
@@ -38,12 +42,9 @@ class Application:
         wd.find_element_by_name("group_footer").clear()
         wd.find_element_by_name("group_footer").send_keys(group.footer)
 
-    def submit_group_creation(self):
-        wd = self.wd
-        self.submit_group_creation()
-        wd.find_element_by_name("submit").click()
 
-    def return_to_group_creation(self, ):
+
+    def return_to_group_creation(self):
         wd = self.wd
         self.return_to_group_creation()
         wd.find_element_by_link_text("group page").click()
