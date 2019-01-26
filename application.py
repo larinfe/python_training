@@ -41,6 +41,8 @@ class Application:
         wd.find_element_by_name("group_footer").click()
         wd.find_element_by_name("group_footer").clear()
         wd.find_element_by_name("group_footer").send_keys(group.footer)
+        wd.find_element_by_name("submit").click()
+        wd.find_element_by_link_text("group page").click()
 
 
 
