@@ -1,3 +1,6 @@
+import pytest
+from model.group import Group
+from fixture.application import Application
 
 
 @pytest.fixture
@@ -8,14 +11,14 @@ def app(request):
 
 
 def test_add_group(app):
-    app.login(username="admin", password="secret")
-    app.fill_group_form(Group(name="call", header="cool", footer="cell"))
-    app.logout()
+    app.session.login("admin", "secret")
+    app.fill_group_form(Group("call", "cool", "cell"))
+    app.session.logout()
 
 
 def test_add_empty_group(app):
-    app.login(username = "admin", password = "secret")
-    app.fill_group_form(Group(name = "", header = "", footer = ""))
-    app.logout()
+    app.session.login("admin", "secret")
+    app.fill_group_form(Group("", "", ""))
+    app.session.logout()
 
 
