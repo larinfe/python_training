@@ -1,7 +1,6 @@
 
 
 
-
 def test_delete__first_group(app):
     app.session.login("admin", "secret")
     app.group.delete_first_group()
