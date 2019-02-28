@@ -38,15 +38,6 @@ class GroupHelper:
         self.change_field_value("group_header", group.header)
         self.change_field_value("group_footer", group.footer)
 
-        # wd.find_element_by_name("group_header").click()
-        # wd.find_element_by_name("group_header").clear()
-        # wd.find_element_by_name("group_header").send_keys(group.header)
-        #
-        # wd.find_element_by_name("group_footer").click()
-        # wd.find_element_by_name("group_footer").clear()
-        # wd.find_element_by_name("group_footer").send_keys(group.footer)
-
-
 
     def return_to_group_creation(self):
         wd = self.app.wd
@@ -75,12 +66,17 @@ class GroupHelper:
         # fill contact form
         wd = self.app.wd
         self.init_contact_creation()
-        wd.find_element_by_name("firstname").send_keys(contact.firstname)
-        wd.find_element_by_name("middlename").send_keys(contact.middlename)
-        wd.find_element_by_name("lastname").send_keys(contact.lastname)
-        wd.find_element_by_name("address").send_keys(contact.address)
-        wd.find_element_by_name("home").send_keys(contact.home)
+        self.contact_field(contact)
         self.submit_creation()
+
+    def contact_field(self, contact):
+        wd = self.app.wd
+        self.change_field_value("firstname", contact.firstname)
+        self.change_field_value("middlename", contact.middlename)
+        self.change_field_value("lastname", contact.lastname)
+        self.change_field_value("address", contact.address)
+        self.change_field_value("home", contact.home)
+
 
     def init_contact_creation(self):
         # init contact creation
@@ -89,9 +85,9 @@ class GroupHelper:
 
     def delete_all_contact(self):
         wd = self.app.wd
-        # select first group
         wd.get("http://localhost/addressbook/")
-        wd.find_element_by_id("MassCB").click()
+        # select first group
+        wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # submit deletion
         wd.switch_to_alert().accept()
@@ -103,6 +99,18 @@ class GroupHelper:
         # open modification form
         wd.find_element_by_name("edit").click()
         # fill group form
+
         self.fill_group_form(new_group_data)
+        # submit
+        wd.find_element_by_name("update").click()
+
+    def modify_first_contact(self, new_contact_data):
+        wd = self.app.wd
+        wd.get("http://localhost/addressbook/")
+        wd.find_element_by_name("selected[]").click()
+        # open modification form
+        wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a").click()
+        # fill group form
+        self.contact_field(new_contact_data)
         # submit
         wd.find_element_by_name("update").click()
