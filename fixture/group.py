@@ -114,3 +114,8 @@ class GroupHelper:
         self.contact_field(new_contact_data)
         # submit
         wd.find_element_by_name("update").click()
+
+    def count(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("groups").click()
+        return len(wd.find_elements_by_name("selected[]"))
