@@ -3,4 +3,3 @@
 
 def test_del_contact(app):
     app.group.delete_all_contact()
-    app.session.logout()
