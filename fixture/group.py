@@ -79,3 +79,7 @@ class GroupHelper:
         wd = self.app.wd
         self.open_groups_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def open_app_page(self):
+        wd = self.app.wd
+        wd.get("http://localhost/addressbook/")

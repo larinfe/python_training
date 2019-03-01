@@ -41,9 +41,9 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("add new").click()
 
-    def delete_all_contact(self):
+    def delete_first_contact(self):
         wd = self.app.wd
-        wd.get("http://localhost/addressbook/")
+        self.open_app_page()
         # select first group
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath("//input[@value='Delete']").click()
@@ -53,7 +53,7 @@ class ContactHelper:
 
     def modify_first_contact(self, new_contact_data):
         wd = self.app.wd
-        wd.get("http://localhost/addressbook/")
+        self.open_app_page()
         wd.find_element_by_name("selected[]").click()
         # open modification form
         wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a").click()
@@ -66,3 +66,7 @@ class ContactHelper:
 #         wd = self.app.wd
 #         wd.find_element_by_link_text("groups").click()
 #         return len(wd.find_elements_by_name("selected[]"))
+
+    def open_app_page(self):
+        wd = self.app.wd
+        wd.get("http://localhost/addressbook/")
