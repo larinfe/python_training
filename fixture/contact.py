@@ -4,7 +4,7 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
-#
+
     def change_field_value(self, field_name, text):
         wd = self.app.wd
         if text is not None:
@@ -62,10 +62,10 @@ class ContactHelper:
         # submit
         wd.find_element_by_name("update").click()
 #
-#     def count(self):
-#         wd = self.app.wd
-#         wd.find_element_by_link_text("groups").click()
-#         return len(wd.find_elements_by_name("selected[]"))
+    def count(self):
+        wd = self.app.wd
+        self.open_app_page()
+        return len(wd.find_elements_by_name("selected[]"))
 
     def open_app_page(self):
         wd = self.app.wd
