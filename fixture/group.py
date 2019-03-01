@@ -51,7 +51,7 @@ class GroupHelper:
 
     def delete_first_group(self):
         wd = self.app.wd
-        self.open_groups_page()
+        # self.open_groups_page()
         self.open_home_page()
         self.select_first_group(wd)
         # submit deletion
