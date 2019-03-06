@@ -11,7 +11,6 @@ def test_add_contact(app):
     print(sorted(old_contacts, key=Contact.id_or_max))
     print('//////')
     print(sorted(new_contacts, key=Contact.id_or_max))
-    print(contact)
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
 
 # def test_add_contact_empty(app):
