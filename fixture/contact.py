@@ -1,5 +1,6 @@
 from model.contact import Contact
 
+
 class ContactHelper:
 
 
@@ -14,9 +15,9 @@ class ContactHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(text)
 
-    def select_first_group(self, wd):
-        # select first group
-        wd.find_element_by_name("selected[]").click()
+    # def select_first_group(self, wd):
+    #     # select first group
+    #     wd.find_element_by_name("selected[]").click()
 
     def submit_creation(self):
         # submit contact creation
@@ -29,6 +30,7 @@ class ContactHelper:
         self.init_contact_creation()
         self.contact_field(contact)
         self.submit_creation()
+        self.contact_cache = None
 
     def contact_field(self, contact):
         wd = self.app.wd
@@ -45,25 +47,42 @@ class ContactHelper:
 
     def delete_first_contact(self):
         wd = self.app.wd
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
+        wd = self.app.wd
         self.open_app_page()
         # select first group
-        wd.find_element_by_name("selected[]").click()
+        self.select_contact_by_index(index)
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # submit deletion
         wd.switch_to_alert().accept()
+        self.contact_cache = None
 
+    def select_first_contact(self):
+        wd = self.app.wd
+        wd.find_element_by_name("selected[]").click()
 
-    def modify_first_contact(self, new_contact_data):
+    def select_contact_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
+    def modify_contact_by_index(self, index, new_contact_data):
         wd = self.app.wd
         self.open_app_page()
-        wd.find_element_by_name("selected[]").click()
+        self.select_contact_by_index(index)
         # open modification form
         wd.find_element_by_xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a").click()
         # fill group form
         self.contact_field(new_contact_data)
         # submit
         wd.find_element_by_name("update").click()
-#
+        self.contact_cache = None
+
+    def modify_first_contact(self):
+        wd = self.app.wd
+        self.modify_contact_by_index(0)
+
     def count(self):
         wd = self.app.wd
         self.open_app_page()
@@ -74,12 +93,16 @@ class ContactHelper:
         wd.get("http://localhost/addressbook/")
 
 
+    contact_cache = None
+
     def get_contact_list(self):
-        wd = self.app.wd
-        self.open_app_page()
-        contacts = []
-        for element in wd.find_elements_by_css_selector("tr[name='entry']"):
-            cells = element.find_elements_by_tag_name("td")
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            contacts.append(Contact(lastname=cells[1].text, firstname=cells[2].text, address=cells[3].text, id=id))
-        return contacts
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.open_app_page()
+            self.contact_cache = []
+            for element in wd.find_elements_by_css_selector("tr[name='entry']"):
+                cells = element.find_elements_by_tag_name("td")
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                self.contact_cache.append(Contact(lastname=cells[1].text, firstname=cells[2].text, address=cells[3].text, id=id))
+
+        return list(self.contact_cache)
